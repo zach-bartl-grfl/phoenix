@@ -1,0 +1,46 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "phoenix", "phoenix\phoenix.csproj", "{A3AA0414-9F57-4C42-B15D-0B5078D53880}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "phoenix.sync", "phoenix.sync\phoenix.sync.csproj", "{344C9CED-7866-4F1B-969D-DD515ACC21F1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "phoenix.core", "phoenix.core\phoenix.core.csproj", "{E8AF5651-870B-4E77-8E2B-659A307F8A73}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "phoenix.requests", "phoenix.requests\phoenix.requests.csproj", "{8B2BB47B-4149-48E5-9EA8-762AC4C79703}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docker-compose", "docker-compose", "{C1C1007D-70C4-420D-BEA1-687CF9524A88}"
+ProjectSection(SolutionItems) = preProject
+	.dockerignore = .dockerignore
+	docker-compose.yml = docker-compose.yml
+EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "env", "env", "{B935AB8F-9F86-4588-B3E5-7CFF5B5082D3}"
+ProjectSection(SolutionItems) = preProject
+	.api-env = .api-env
+	.mongo-env = .mongo-env
+EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A3AA0414-9F57-4C42-B15D-0B5078D53880}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A3AA0414-9F57-4C42-B15D-0B5078D53880}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A3AA0414-9F57-4C42-B15D-0B5078D53880}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A3AA0414-9F57-4C42-B15D-0B5078D53880}.Release|Any CPU.Build.0 = Release|Any CPU
+		{344C9CED-7866-4F1B-969D-DD515ACC21F1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{344C9CED-7866-4F1B-969D-DD515ACC21F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{344C9CED-7866-4F1B-969D-DD515ACC21F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{344C9CED-7866-4F1B-969D-DD515ACC21F1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E8AF5651-870B-4E77-8E2B-659A307F8A73}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E8AF5651-870B-4E77-8E2B-659A307F8A73}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E8AF5651-870B-4E77-8E2B-659A307F8A73}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E8AF5651-870B-4E77-8E2B-659A307F8A73}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8B2BB47B-4149-48E5-9EA8-762AC4C79703}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8B2BB47B-4149-48E5-9EA8-762AC4C79703}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8B2BB47B-4149-48E5-9EA8-762AC4C79703}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8B2BB47B-4149-48E5-9EA8-762AC4C79703}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp2.2</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="MediatR" Version="7.0.0" />
+        <PackageReference Include="MongoDB.Bson" Version="2.8.1" />
+        <PackageReference Include="MongoDB.Driver" Version="2.8.1" />
+        <PackageReference Include="Polly" Version="7.1.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\phoenix.core\phoenix.core.csproj" />
+      <ProjectReference Include="..\phoenix.sync\phoenix.sync.csproj" />
+    </ItemGroup>
+
+</Project>

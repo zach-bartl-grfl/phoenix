@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+    <PropertyGroup>
+        <TargetFramework>netcoreapp2.2</TargetFramework>
+        <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.AspNetCore.App" />
+        <PackageReference Include="MediatR" Version="7.0.0" />
+        <PackageReference Include="StructureMap" Version="4.7.1" />
+        <PackageReference Include="StructureMap.Microsoft.DependencyInjection" Version="2.0.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\phoenix.core\phoenix.core.csproj" />
+      <ProjectReference Include="..\phoenix.requests\phoenix.requests.csproj" />
+    </ItemGroup>
+</Project>

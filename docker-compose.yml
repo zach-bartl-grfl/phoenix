@@ -1,0 +1,64 @@
+version: '3.7'
+# YAML Alias not supported in Visual Studio. (i.e. "x-alias: &alias_name")
+# YAML Array key-value pairs not supported in Visual Studio. (i.e. "- env_name=env_value")
+services:
+  phx_api:
+    container_name: phx_api
+    image: phoenix/phoenix-api:dev
+    build:
+      context: .
+      dockerfile: ./phoenix/Dockerfile
+      args:
+        BUILD_CONFIGURATION: Debug
+    depends_on:
+      - phx_mongo
+    ports:
+      - 5001:5000
+    env_file: .api-env
+    security_opt:
+      - no-new-privileges
+    restart: unless-stopped
+    networks:
+      internal_network:
+        aliases:
+          - phx-api
+            
+  phx_sync:
+    container_name: phx_sync
+    image: phoenix/phoenix-sync:dev
+    build:
+      context: .
+      #dockerfile: ./phoenix.sync/Dockerfile
+      args:
+        BUILD_CONFIGURATION: Debug
+    depends_on:
+      - phx_mongo
+    #env_file: .sync-env
+    security_opt:
+      - no-new-privileges
+    restart: unless-stopped
+    networks:
+      internal_network:
+        aliases:
+          - phx-sync
+            
+  phx_mongo:
+    container_name: phx_mongo
+    image: mongo:4.2.0
+    ports:
+      - 27017:27017
+    restart: unless-stopped
+    networks:
+      internal_network:
+        aliases:
+          - phx-mongo
+    volumes:
+      - "mongodb:/data/db"
+
+volumes:
+  mongodb:
+    external: false
+
+networks:
+  internal_network:
+    driver: bridge

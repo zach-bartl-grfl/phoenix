@@ -1,0 +1,6 @@
+ASPNETCORE_ENVIRONMENT=Development
+DatabaseConfig__ConnectionString=mongodb://localhost:27017/Phoenix
+LeviathanConfig__BaseUrl=https://leviathan.challenge.growflow.com
+LeviathanConfig__ApiUser=CHALLENGEUSER
+LeviathanConfig__ApiKey=CHALLENGEKEY
+LeviathanConfig__QueryTimeout=10

@@ -1,0 +1,9 @@
+.idea/
+
+*/obj/
+*/bin/
+
+*.suo
+*.user
+*.sln.docstates
+.vscode/settings.json
