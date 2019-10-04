@@ -50,21 +50,9 @@ namespace phoenix.requests.Customers
       
       _logger.LogError($"Inserted customer: {request.Customer.Id} {request.Customer.LeviathanId}");
       
-      PublishNotification(new CustomerCreatedEvent {Customer = request.Customer}, cancellationToken);
+      await _mediator.Publish(new CustomerCreatedEvent {Entity = request.Customer}, cancellationToken);
       
       return Unit.Value;
-    }
-
-    public void PublishNotification(CustomerCreatedEvent notification, CancellationToken cancellationToken)
-    {
-      _logger.LogError($"Syncing to Leviathan for customer: {notification.Customer.Id}");
-      
-      // Run consumers of Phoenix Customer Creation event asynchronously
-      // but do not await results in event of timeouts, temporary 502s, etc.
-      Task.Run(() =>
-      {
-        _mediator.Publish(notification, cancellationToken);
-      }, cancellationToken);
     }
   }
 }

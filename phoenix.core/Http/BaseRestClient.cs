@@ -131,8 +131,9 @@ namespace phoenix.core.Http
         var failureMessage = $"Request {method} {url} could not be completed " +
                              $"(Response: {response?.StatusCode.ToString() ?? "N/A"}).";
         _logger.LogError(failureMessage);
-        throw new CleanThirdPartyRequestException(
+        throw new BusinessRuleThirdPartyServiceException(
           failureMessage,
+          _httpClient.BaseAddress.ToString(),
           await response?.Content.ReadAsStringAsync());
       }
 
@@ -141,8 +142,9 @@ namespace phoenix.core.Http
         var failureMessage = $"Request {method} {url} could not be completed " +
                              $"(Response: {response.StatusCode.ToString() ?? "N/A"}).";
         _logger.LogError(failureMessage);
-        throw new InternalThirdPartyRequestException(
+        throw new InternalThirdPartyServiceException(
           failureMessage,
+          _httpClient.BaseAddress.ToString(),
           await response.Content.ReadAsStringAsync());
       }
 
@@ -153,7 +155,9 @@ namespace phoenix.core.Http
         _logger.LogError($"params: {response.RequestMessage.Headers.GetValues(API_KEY_KEY).FirstOrDefault()}");
         _logger.LogError($"params: {response.RequestMessage.Headers.GetValues(API_USER_KEY).FirstOrDefault()}");
         _logger.LogError(failureMessage);
-        throw new InternalThirdPartyRequestException(failureMessage);
+        throw new InternalThirdPartyServiceException(
+          failureMessage,
+          _httpClient.BaseAddress.ToString());
       }
       
       return await response.Content.ReadAsAsync<T>(cancellationToken);

@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using phoenix.core.Domain;
 using phoenix.core.Infrastructure;
+using phoenix.Filters;
 using phoenix.Infrastructure;
 using phoenix.requests.Infrastructure;
 using StructureMap;
@@ -37,9 +38,12 @@ namespace phoenix
       services.Configure<LeviathanConfig>(config.GetSection("LeviathanConfig"));
       
       services
-        .AddMvc()
+        .AddMvc( options =>
+        {
+          options.Filters.Add(new BusinessRuleThirdPartyServiceExceptionFilter());
+          options.Filters.Add(new InternalThirdPartyServiceExceptionFilter());
+        })
         .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-      
 
       container.Populate(services);
       return container.GetInstance<IServiceProvider>();
