@@ -1,6 +1,9 @@
+using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
+using Microsoft.Extensions.Logging;
+using MongoDB.Driver;
 using phoenix.core.Data;
 using phoenix.core.Domain;
 
@@ -19,22 +22,49 @@ namespace phoenix.requests.Customers
   /// </summary>
   public class CreateCustomerCommandHandler : IRequestHandler<CreateCustomerCommand, Unit>
   {
-    private readonly IMongoDatabaseProvider _mongoDatabaseProvider;
     private readonly IMediator _mediator;
+    private readonly ILogger<CreateCustomerCommandHandler> _logger;
+    private readonly IMongoCollection<Customer> _collection;
 
-    public CreateCustomerCommandHandler(IMongoDatabaseProvider mongoDatabaseProvider, IMediator mediator)
+    public CreateCustomerCommandHandler(IMongoDatabaseProvider mongoDatabaseProvider,
+      IMediator mediator,
+      ILogger<CreateCustomerCommandHandler> logger)
     {
-      _mongoDatabaseProvider = mongoDatabaseProvider;
       _mediator = mediator;
+      _logger = logger;
+      _collection = mongoDatabaseProvider.Collection<Customer>();
     }
     
     public async Task<Unit> Handle(CreateCustomerCommand request, CancellationToken cancellationToken)
     {
-      await _mongoDatabaseProvider.Collection<Customer>()
-        .InsertOneAsync(request.Customer, cancellationToken: cancellationToken);
-      _mediator.Publish(new CustomerCreatedEvent {Customer = request.Customer});
+      try
+      {
+        await _collection
+          .InsertOneAsync(request.Customer, cancellationToken: cancellationToken);
+      }
+      catch (MongoWriteException)
+      {
+        _logger.LogError($"Customer already exists: {request.Customer.Id} {request.Customer.LeviathanId}");
+        return Unit.Value;
+      }
+      
+      _logger.LogError($"Inserted customer: {request.Customer.Id} {request.Customer.LeviathanId}");
+      
+      PublishNotification(new CustomerCreatedEvent {Customer = request.Customer}, cancellationToken);
+      
       return Unit.Value;
     }
-  }
 
+    public void PublishNotification(CustomerCreatedEvent notification, CancellationToken cancellationToken)
+    {
+      _logger.LogError($"Syncing to Leviathan for customer: {notification.Customer.Id}");
+      
+      // Run consumers of Phoenix Customer Creation event asynchronously
+      // but do not await results in event of timeouts, temporary 502s, etc.
+      Task.Run(() =>
+      {
+        _mediator.Publish(notification, cancellationToken);
+      }, cancellationToken);
+    }
+  }
 }

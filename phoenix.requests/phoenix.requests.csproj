@@ -5,6 +5,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="Microsoft.AspNetCore.App" />
         <PackageReference Include="MediatR" Version="7.0.0" />
         <PackageReference Include="MongoDB.Bson" Version="2.8.1" />
         <PackageReference Include="MongoDB.Driver" Version="2.8.1" />
@@ -13,7 +14,6 @@
 
     <ItemGroup>
       <ProjectReference Include="..\phoenix.core\phoenix.core.csproj" />
-      <ProjectReference Include="..\phoenix.sync\phoenix.sync.csproj" />
     </ItemGroup>
 
 </Project>

@@ -1,15 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.IO;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
+using phoenix.core.Domain;
 using phoenix.core.Infrastructure;
 using phoenix.Infrastructure;
 using phoenix.requests.Infrastructure;
@@ -30,10 +26,20 @@ namespace phoenix
     public IServiceProvider ConfigureServices(IServiceCollection services)
     {
       var container = ConfigureContainer();
+
+      var configBuilder = new ConfigurationBuilder()
+        .SetBasePath(Directory.GetCurrentDirectory())
+        .AddJsonFile("appsettings.json", optional: true)
+        .AddEnvironmentVariables();
+      var config = configBuilder.Build();
+      
+      services.Configure<DatabaseConfig>(config.GetSection("DatabaseConfig"));
+      services.Configure<LeviathanConfig>(config.GetSection("LeviathanConfig"));
       
       services
         .AddMvc()
         .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+      
 
       container.Populate(services);
       return container.GetInstance<IServiceProvider>();

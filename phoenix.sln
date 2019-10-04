@@ -14,12 +14,6 @@ ProjectSection(SolutionItems) = preProject
 	docker-compose.yml = docker-compose.yml
 EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "env", "env", "{B935AB8F-9F86-4588-B3E5-7CFF5B5082D3}"
-ProjectSection(SolutionItems) = preProject
-	.api-env = .api-env
-	.mongo-env = .mongo-env
-EndProjectSection
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

@@ -25,6 +25,7 @@ namespace phoenix.core.Data
     DeadLetter<T> Retrieve();
   }
   
+  /// <inheritdoc />
   /// <summary>
   /// A quick in memory implementation of a dead letter queue for Phoenix
   /// </summary>

@@ -1,3 +1,4 @@
+using phoenix.core.Data;
 using StructureMap;
 
 namespace phoenix.core.Infrastructure
@@ -11,6 +12,9 @@ namespace phoenix.core.Infrastructure
         scan.AssemblyContainingType<CoreRegistry>();
         scan.WithDefaultConventions();
       });
+      
+      ForSingletonOf<IMongoDatabaseProvider>().ClearAll().Use<MongoDatabaseProvider>();
+      For(typeof(IDeadLetterQueueBroker<>)).Use(typeof(DeadLetterQueueBroker<>));
     }
   }
 }

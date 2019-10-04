@@ -30,10 +30,10 @@ namespace phoenix.core.Data
       
       Phoenix = client.GetDatabase(DatabaseName);
     }
-    public IMongoCollection<T> Collection<T>()
     
+    public IMongoCollection<T> Collection<T>()
     {
-      return Phoenix.GetCollection<T>($"{nameof(T)}s");
+      return Phoenix.GetCollection<T>($"{typeof(T).Name}s");
     }
   }
 }

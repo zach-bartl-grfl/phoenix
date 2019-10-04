@@ -13,5 +13,12 @@
 
     <ItemGroup>
       <ProjectReference Include="..\phoenix.core\phoenix.core.csproj" />
+      <ProjectReference Include="..\phoenix.requests\phoenix.requests.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Include="appsettings.json">
+        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      </Content>
     </ItemGroup>
 </Project>

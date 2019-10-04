@@ -1,10 +1,14 @@
 ﻿using System;
+using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting.Internal;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using phoenix.core.Domain;
 using phoenix.core.Infrastructure;
+using phoenix.requests.Infrastructure;
 using StructureMap;
 
 namespace phoenix.sync
@@ -19,7 +23,17 @@ namespace phoenix.sync
         {
           var container = ConfigureContainer();
           
+          var configBuilder = new ConfigurationBuilder()
+            .SetBasePath(Directory.GetCurrentDirectory())
+            .AddJsonFile("appsettings.json", optional: true)
+            .AddEnvironmentVariables();
+          var config = configBuilder.Build();
+      
+          services.Configure<DatabaseConfig>(config.GetSection("DatabaseConfig"));
+          services.Configure<LeviathanConfig>(config.GetSection("LeviathanConfig"));
+          
           services.AddLogging();
+          services.AddMemoryCache();
           services.AddHostedService<LeviathanRetry>();
           services.AddHostedService<LeviathanSync>();
 
@@ -50,6 +64,7 @@ namespace phoenix.sync
     {
       var registry = new Registry();
       registry.IncludeRegistry<CoreRegistry>();
+      registry.IncludeRegistry<RequestsRegistry>();
       var container = new Container(registry);
       container.Populate(services);
       return container;
@@ -57,7 +72,7 @@ namespace phoenix.sync
 
     public IServiceProvider CreateServiceProvider(IContainer containerBuilder)
     {
-      return containerBuilder.GetInstance<IServiceProvider>()
+      return containerBuilder.GetInstance<IServiceProvider>();
     }
   }
 }

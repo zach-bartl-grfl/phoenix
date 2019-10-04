@@ -1,4 +1,3 @@
-using System;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
@@ -6,8 +5,7 @@ using MongoDB.Driver;
 using phoenix.core.Data;
 using phoenix.core.Domain;
 using phoenix.core.Exceptions;
-using phoenix.sync;
-using Polly;
+using phoenix.core.Http;
 
 namespace phoenix.requests.Customers
 {
@@ -33,25 +31,8 @@ namespace phoenix.requests.Customers
 
     public async Task Handle(CustomerCreatedEvent notification, CancellationToken cancellationToken)
     {
-      var basePolicy = Policy<Customer>
-        .Handle<TaskCanceledException>(ex =>
-          !ex.CancellationToken.IsCancellationRequested);
+      if (!string.IsNullOrEmpty(notification.Customer.LeviathanId)) return;
       
-      var retryPolicy = basePolicy
-        .WaitAndRetryAsync(new[]
-        {
-          TimeSpan.FromSeconds(1),
-          TimeSpan.FromSeconds(2),
-          TimeSpan.FromSeconds(3)
-        });
-
-      var fallbackPolicy = basePolicy
-        .FallbackAsync(
-          notification.Customer,
-          async e =>
-          {
-          });
-
       Customer leviathanCustomer = null;
       try
       {
@@ -60,7 +41,7 @@ namespace phoenix.requests.Customers
           notification.Customer,
           cancellationToken);
       }
-      catch (RequestUnsuccessfulException ex)
+      catch (ThirdPartyRequestException ex)
       {
         // Publish unsuccessful Leviathan POST to Dead Letter Queue.
         // In a real environment this queue might exist in AMQP, Kafka, etc.
@@ -68,7 +49,8 @@ namespace phoenix.requests.Customers
         // POST / PUT requests to Leviathan.
         _queue.Publish(new DeadLetter<Customer>
         {
-          Exception = ex.Message,
+          Exception = ex is CleanThirdPartyRequestException badEx 
+            ? badEx.Message : "",
           Data = notification.Customer
         });
       }
@@ -76,7 +58,7 @@ namespace phoenix.requests.Customers
       if (leviathanCustomer.Id != notification.Customer.Id)
       {
         var idFilter = Builders<Customer>.Filter
-          .Eq(e => e.Id, notification.Customer.Id);
+          .Eq(c => c.Id, notification.Customer.Id);
         
         notification.Customer.LeviathanId = leviathanCustomer.Id;
         
