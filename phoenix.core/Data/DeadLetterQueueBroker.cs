@@ -23,6 +23,7 @@ namespace phoenix.core.Data
   {
     void Publish(DeadLetter<T> item);
     DeadLetter<T> Retrieve();
+    bool Any();
   }
   
   /// <inheritdoc />
@@ -53,6 +54,11 @@ namespace phoenix.core.Data
     public DeadLetter<T> Retrieve()
     {
       return _queue.Dequeue();
+    }
+
+    public bool Any()
+    {
+      return _queue.Any();
     }
   }
 }

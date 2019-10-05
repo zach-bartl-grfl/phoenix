@@ -1,6 +1,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
+using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
 using phoenix.core.Data;
 using phoenix.core.Domain;
@@ -16,14 +17,17 @@ namespace phoenix.requests.Leviathan
     protected readonly ILeviathanClient LeviathanClient;
     protected readonly IDeadLetterQueueBroker<TEntity> Queue;
     protected readonly IMongoDatabaseProvider MongoDatabaseProvider;
+    private readonly ILogger<LeviathanSyncNotificationHandler<TNotification, TEntity>> _logger;
 
     protected LeviathanSyncNotificationHandler(ILeviathanClient leviathanClient,
       IDeadLetterQueueBroker<TEntity> queue,
-      IMongoDatabaseProvider mongoDatabaseProvider)
+      IMongoDatabaseProvider mongoDatabaseProvider,
+      ILogger<LeviathanSyncNotificationHandler<TNotification, TEntity>> logger)
     {
       LeviathanClient = leviathanClient;
       Queue = queue;
       MongoDatabaseProvider = mongoDatabaseProvider;
+      _logger = logger;
     }
     
     public abstract Task Handle(TNotification notification, CancellationToken cancellationToken);

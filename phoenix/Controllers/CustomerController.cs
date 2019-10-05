@@ -7,7 +7,7 @@ using phoenix.requests.Customers;
 
 namespace phoenix.Controllers
 {
-  [Route("api/customer")]
+  [Route("api/customers")]
   [ApiController]
   public class CustomerController : ControllerBase
   {
@@ -19,9 +19,9 @@ namespace phoenix.Controllers
     }
 
     [HttpGet]
-    public ActionResult GetAll()
+    public async Task<ActionResult> GetAll()
     {
-      return NoContent();
+      return new ObjectResult(await _mediator.Send(new CustomersQuery()));
     }
 
     [HttpPost]

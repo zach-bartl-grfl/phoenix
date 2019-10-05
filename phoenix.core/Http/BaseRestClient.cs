@@ -9,6 +9,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using phoenix.core.Domain;
 using phoenix.core.Exceptions;
 using Polly;
@@ -69,9 +71,6 @@ namespace phoenix.core.Http
       _defaultQuery[API_USER_KEY] = thirdPartyHttpConfig.ApiUser;
       _defaultQuery[API_KEY_KEY] = thirdPartyHttpConfig.ApiKey;
 
-      //_httpClient.DefaultRequestHeaders.Add(API_USER_KEY, thirdPartyHttpConfig.ApiUser);
-      //_httpClient.DefaultRequestHeaders.Add(API_KEY_KEY, thirdPartyHttpConfig.ApiKey);
-
       _defaultRetryPolicy = Policy
         .Handle<TaskCanceledException>()
         .OrResult<HttpResponseMessage>(msg => !msg.IsSuccessStatusCode)
@@ -97,9 +96,7 @@ namespace phoenix.core.Http
         Path = url,
         Query = _defaultQuery.ToString()
       };
-      
 
-      _logger.LogError($"url: {builder}");
       var response = await _defaultRetryPolicy.ExecuteAsync(async () =>
         await _httpClient.GetAsync(builder.Uri, cancellationToken));
 
@@ -115,8 +112,15 @@ namespace phoenix.core.Http
     {
       if (string.IsNullOrEmpty(url)) throw new ArgumentNullException(nameof(url));
 
-      var response = await _defaultRetryPolicy.ExecuteAsync(async () =>
-        await _httpClient.PostAsJsonAsync(url, body, cancellationToken));
+      var jsonBody = JObject.FromObject(body);
+      jsonBody.Add(API_USER_KEY, _defaultQuery[API_USER_KEY]);
+      jsonBody.Add(API_KEY_KEY, _defaultQuery[API_KEY_KEY]);
+      var jsonString = jsonBody.ToString();
+       
+      var response = await _defaultRetryPolicy.ExecuteAsync(async () => 
+        await _httpClient.PostAsync(url,
+          new StringContent(jsonString),
+          cancellationToken));
 
       return await VerifyResponse<T>(url, HttpMethod.Post, response, cancellationToken);
     }
@@ -152,8 +156,6 @@ namespace phoenix.core.Http
       {
         var failureMessage = $"Request {method} {url} could not be completed " +
                              $"(Response: {response.StatusCode.ToString() ?? "N/A"}).";
-        _logger.LogError($"params: {response.RequestMessage.Headers.GetValues(API_KEY_KEY).FirstOrDefault()}");
-        _logger.LogError($"params: {response.RequestMessage.Headers.GetValues(API_USER_KEY).FirstOrDefault()}");
         _logger.LogError(failureMessage);
         throw new InternalThirdPartyServiceException(
           failureMessage,

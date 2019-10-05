@@ -45,12 +45,10 @@ namespace phoenix.requests.Orders
       }
       catch (MongoWriteException)
       {
-        _logger.LogError($"Order already exists: {request.Order.Id} {request.Order.LeviathanId}");
+        _logger.LogInformation($"Order already exists: {request.Order.Id} {request.Order.LeviathanId}");
         return Unit.Value;
       }
       
-      _logger.LogError($"Inserted order: {request.Order.Id} {request.Order.LeviathanId}");
-
       var customer = (await _customerCollection.FindAsync(
         Builders<Customer>.Filter.Eq(c => c.Id, request.Order.CustomerId),
         cancellationToken: cancellationToken)

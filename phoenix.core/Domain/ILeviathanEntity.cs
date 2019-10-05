@@ -6,12 +6,6 @@ namespace phoenix.core.Domain
   /// </summary>
   public interface ILeviathanEntity : IEntity
   {
-    /// <inheritdoc />
-    string Id { get; set; }
-    
-    /// <inheritdoc />
-    string Name { get; set; }
-    
     /// <summary>
     /// The LeviathanId for this Entity
     /// </summary>

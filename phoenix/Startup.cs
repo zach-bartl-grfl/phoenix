@@ -37,6 +37,7 @@ namespace phoenix
       services.Configure<DatabaseConfig>(config.GetSection("DatabaseConfig"));
       services.Configure<LeviathanConfig>(config.GetSection("LeviathanConfig"));
       
+      services.AddLogging();
       services
         .AddMvc( options =>
         {

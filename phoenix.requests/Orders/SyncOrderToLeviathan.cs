@@ -1,5 +1,6 @@
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using phoenix.core.Data;
 using phoenix.core.Domain;
 using phoenix.core.Http;
@@ -16,7 +17,8 @@ namespace phoenix.requests.Orders
   {
     public SyncOrderToLeviathan(ILeviathanClient leviathanClient,
       IDeadLetterQueueBroker<Order> queue,
-      IMongoDatabaseProvider mongoDatabaseProvider) : base(leviathanClient, queue, mongoDatabaseProvider)
+      ILogger<SyncOrderToLeviathan> logger,
+      IMongoDatabaseProvider mongoDatabaseProvider) : base(leviathanClient, queue, mongoDatabaseProvider, logger)
     {
     }
     

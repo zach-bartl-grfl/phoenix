@@ -1,10 +1,10 @@
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using phoenix.core.Data;
 using phoenix.core.Domain;
 using phoenix.core.Http;
 using phoenix.requests.Leviathan;
-using phoenix.requests.Orders;
 
 namespace phoenix.requests.Customers
 {
@@ -17,7 +17,8 @@ namespace phoenix.requests.Customers
   {
     public SyncCustomerToLeviathan(ILeviathanClient leviathanClient,
       IDeadLetterQueueBroker<Customer> queue,
-      IMongoDatabaseProvider mongoDatabaseProvider) : base(leviathanClient, queue, mongoDatabaseProvider)
+      ILogger<SyncCustomerToLeviathan> logger,
+      IMongoDatabaseProvider mongoDatabaseProvider) : base(leviathanClient, queue, mongoDatabaseProvider, logger)
     {
     }
 

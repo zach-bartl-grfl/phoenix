@@ -16,5 +16,6 @@ namespace phoenix.core.Domain
     public string ApiKey { get; set; }
     public int QueryTimeout { get; set; }
     public int SyncDelay { get; set; }
+    public int RetryDelay { get; set; }
   }
 }

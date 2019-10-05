@@ -18,9 +18,9 @@ namespace phoenix.Controllers
     }
 
     [HttpGet]
-    public ActionResult GetAll()
+    public async Task<ActionResult> GetAll()
     {
-      return NoContent();
+      return new ObjectResult(await _mediator.Send(new OrdersQuery()));
     }
 
     [HttpPost]

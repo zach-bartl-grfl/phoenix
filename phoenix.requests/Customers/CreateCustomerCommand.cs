@@ -44,11 +44,9 @@ namespace phoenix.requests.Customers
       }
       catch (MongoWriteException)
       {
-        _logger.LogError($"Customer already exists: {request.Customer.Id} {request.Customer.LeviathanId}");
+        _logger.LogInformation($"Customer already exists: {request.Customer.Id} {request.Customer.LeviathanId}");
         return Unit.Value;
       }
-      
-      _logger.LogError($"Inserted customer: {request.Customer.Id} {request.Customer.LeviathanId}");
       
       await _mediator.Publish(new CustomerCreatedEvent {Entity = request.Customer}, cancellationToken);
       
